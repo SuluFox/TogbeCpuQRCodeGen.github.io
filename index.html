@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.4/jspdf.min.js"></script>
+    <title>Togbe Cpu QR Code Generator</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "poppin", sans-serif;
+      }
+      body {
+        background-color: #344c6a;
+      }
+      .printableContainer {
+        visibility: hidden;
+      }
+      .container {
+        width: 400px;
+        padding: 25px 35px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #fff;
+        border-radius: 10px;
+      }
+      .container p {
+        font-weight: 600;
+        font-size: 15px;
+        margin-bottom: 8px;
+      }
+      .container input {
+        width: 100%;
+        height: 50px;
+        border: 1px solid #494eea;
+        outline: 0;
+        padding: 10px;
+        margin: 10px 0 20px;
+        border-radius: 5px;
+      }
+      .container .gqrbtn {
+        width: 100%;
+        height: 50px;
+        border: 0;
+        background: #494eea;
+        color: #fff;
+        outline: 0;
+        margin: 20px 0;
+        border-radius: 5px;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .container .pdfbtn {
+        width: 100%;
+        height: 50px;
+        border: 0;
+        background: #4eea49;
+        color: #fff;
+        outline: 0;
+        margin: 20px 0;
+        border-radius: 5px;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        font-weight: 500;
+        visibility: hidden; /* Initially hidden */
+      }
+      .reset {
+        width: 100%;
+        height: 50px;
+        border: 0;
+        background: #ea4949;
+        color: #fff;
+        outline: 0;
+        margin: 20px 0;
+        border-radius: 5px;
+        box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+        cursor: pointer;
+        font-weight: 500;
+      }
+      .container .reset:hover {
+        background-color: #810909; /* Change the background color on hover */
+      }
+      .container .gqrbtn:hover {
+        background-color: #05085d; /* Change the background color on hover */
+        color: #fff; /* Change the text color on hover */
+      }
+      .container .pdfbtn:hover {
+        background-color: #0e710b; /* Change the background color on hover */
+        color: #fff; /* Change the text color on hover */
+      }
+
+      .container .pdfbtn.show {
+        visibility: visible; /* Shown when the show class is added */
+      }
+
+      .image-container {
+        display: flex;
+        justify-content: center; /* Horizontally center the images */
+        align-items: center; /* Vertically center the images */
+      }
+
+      .image-container img {
+        width: 200px; /* Adjust the width as needed */
+        height: auto; /* Maintain the aspect ratio */
+        margin-right: 10px; /* Add some space between the images */
+      }
+
+      #imgBox.show-img {
+        max-height: 300px;
+        margin: 10px auto;
+        border: 1px solid #d1d1d1;
+      }
+      .error {
+        animation: shake 0.1s linear 10;
+      }
+      @keyframes shake {
+        0% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-2px);
+        }
+        50% {
+          transform: translateX(0);
+        }
+        75% {
+          transform: translateX(2px);
+        }
+        100% {
+          transform: translateX(0);
+        }
+      }
+
+      /* Hide elements when printing */
+      @media print {
+        body * {
+          visibility: hidden;
+        }
+        .myClass,
+        .myClass * {
+          visibility: visible;
+        }
+        .myClass {
+          position: absolute;
+          left: 0;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          background-color: white;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-start;
+          padding: 20px; /* Add padding for spacing */
+          gap: 20px; /* Add gap between images */
+        }
+        .pdfbtn {
+          display: none;
+        }
+        .image-container .printable-image {
+          width: 80px;
+          height: 100%;
+          object-fit: cover;
+          margin: 10px; /* Add equal margin to images */
+        }
+        .image-printable-container {
+          display: flex;
+          justify-content: space-between;
+          flex-direction: row; /* Stack images horizontally */
+          align-items: center; /* Center items vertically */
+          width: 100%;
+          margin-top: 0; /* Move image-container to the top */
+        }
+
+        .printableContainer {
+          visibility: visible;
+        }
+        .no-print {
+          display: none !important;
+        }
+        /* Hide timestamp and URL */
+        .timestamp,
+        .url {
+          display: none !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <p>Togbe Cpu QR Code Generator</p>
+      <input type="text" placeholder="Enter Coordinates" id="qrCoordinates" />
+      <input type="text" placeholder="Enter Job code" id="qrJobcode" />
+      <div class="image-container">
+        <img src="" id="qrImage1" />
+        <img src="" id="qrImage2" />
+      </div>
+      <button class="gqrbtn" onclick="generateQr()">Generate QR Code</button>
+      <button class="pdfbtn no-print" onclick="window.print()">
+        Click to download
+      </button>
+      <button class="reset" onclick="resetForm()">Reset</button>
+    </div>
+    <div class="printableContainer">
+      <div id="myDiv" class="myClass">
+        <div class="image-container image-printable-container">
+          <img src="image1.jpg" alt="Image 1" class="printable-image" />
+          <img src="image2.jpg" alt="Image 2" class="printable-image" />
+        </div>
+      </div>
+    </div>
+    <script>
+      let imgBox = document.querySelector(".image-container");
+      let qrImage1 = document.getElementById("qrImage1");
+      let qrImage2 = document.getElementById("qrImage2");
+      let qrCoordinates = document.getElementById("qrCoordinates");
+      let qrJobcode = document.getElementById("qrJobcode");
+      let pdfbtn = document.querySelector(".pdfbtn");
+
+      function resetForm() {
+        // Clear input fields
+        qrCoordinates.value = "";
+        qrJobcode.value = "";
+
+        // Clear generated QR codes
+        qrImage1.src = "";
+        qrImage2.src = "";
+
+        // Hide PDF download button
+        pdfbtn.classList.remove("show");
+
+        // Hide image container
+        imgBox.classList.remove("show-img");
+      }
+
+      function generateQr() {
+        if (qrCoordinates.value.length > 0 && qrJobcode.value.length > 0) {
+          let imageCount = 0;
+
+          qrImage1.onload = qrImage2.onload = function () {
+            imageCount++;
+
+            if (imageCount === 2) {
+              pdfbtn.classList.add("show");
+              imgBox.classList.add("show-img");
+
+              // Set the src attribute of the image tags in the printableContainer
+              document.querySelector(
+                ".printableContainer #myDiv .image-container img:first-child"
+              ).src = qrImage1.src;
+              document.querySelector(
+                ".printableContainer #myDiv .image-container img:last-child"
+              ).src = qrImage2.src;
+            }
+          };
+          qrImage1.src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
+            qrCoordinates.value;
+          qrImage2.src =
+            "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
+            qrJobcode.value;
+        } else {
+          if (qrCoordinates.value.length === 0) {
+            qrCoordinates.classList.add("error");
+          }
+          if (qrJobcode.value.length === 0) {
+            qrJobcode.classList.add("error");
+          }
+          setTimeout(() => {
+            qrCoordinates.classList.remove("error");
+            qrJobcode.classList.remove("error");
+          }, 1000);
+        }
+      }
+    </script>
+  </body>
+</html>
