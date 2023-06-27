@@ -32,6 +32,14 @@
         background: #fff;
         border-radius: 10px;
       }
+
+      .container .copyright {
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: #888;
+        font-size: 12px;
+      }
       .container p {
         font-weight: 600;
         font-size: 15px;
@@ -159,7 +167,9 @@
           display: flex;
           justify-content: space-between;
           align-items: flex-start;
-          padding: 20px; /* Add padding for spacing */
+          width: 100vw;
+          height: 100vh;
+          padding: 13px; /* Add padding for spacing */
           gap: 20px; /* Add gap between images */
         }
         .pdfbtn {
@@ -169,20 +179,16 @@
           width: 80px;
           height: 100%;
           object-fit: cover;
-          margin: 10px; /* Add equal margin to images */
+          margin: 0; /* Add reduced top margin and equal margin to other sides */
         }
+
         .image-printable-container {
           display: flex;
           justify-content: space-between;
-          flex-direction: row; /* Stack images horizontally */
-          align-items: center; /* Center items vertically */
+          flex-direction: row;
+          align-items: flex-start; /* Updated: Align items to the top */
           width: 100%;
-          margin-top: 0; /* Move image-container to the top */
-        }
-
-        .printableContainer {
-            background-color: #fff;
-          visibility: visible;
+          margin-top: 0;  /*Updated: Remove top margin */
         }
         .no-print {
           display: none !important;
@@ -204,20 +210,26 @@
         <img src="" id="qrImage1" />
         <img src="" id="qrImage2" />
       </div>
+      <div class="copyright">
+        &copy; 2023 Togbe Cpu. All rights reserved.
+      </div>
       <button class="gqrbtn" onclick="generateQr()">Generate QR Code</button>
       <button class="pdfbtn no-print" onclick="window.print()">
         Click to download
       </button>
       <button class="reset" onclick="resetForm()">Reset</button>
     </div>
+
+
     <div class="printableContainer">
       <div id="myDiv" class="myClass">
         <div class="image-container image-printable-container">
-          <img src="image1.jpg" alt="Image 1" class="printable-image" />
-          <img src="image2.jpg" alt="Image 2" class="printable-image" />
+          <img src=""  class="printable-image" />
+          <img src=""  class="printable-image" />
         </div>
       </div>
     </div>
+
     <script>
       let imgBox = document.querySelector(".image-container");
       let qrImage1 = document.getElementById("qrImage1");
