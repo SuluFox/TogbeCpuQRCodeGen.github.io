@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barcode and QR Code Generator</title>
+    <link rel="stylesheet" href="styles.css">
+
+    <style>
+        .input-container {
+            margin: 25%;
+            margin-left: 50%;
+            margin-top: auto;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            border-radius: 10px;
+        }
+
+        .form {
+            max-width: 320px;
+            width: 100%;
+            background-color: #fff;
+            padding: 50px;
+            margin: 25px;
+            box-shadow: 0px 0px 0px 4px rgba(52, 52, 53, 0.185);
+            display: flex;
+            flex-direction: column;
+            border-radius: 10px;
+        }
+
+        .form .button-container {
+            display: flex;
+            gap: 5px;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #1a202c;
+        }
+
+        .label {
+            color: rgb(0, 0, 0);
+            margin-bottom: 4px;
+        }
+
+        .input {
+            padding: 10px;
+            margin-bottom: 20px;
+            width: 100%;
+            font-size: 1rem;
+            color: #4a5568;
+            outline: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .input:focus {
+            background-color: #fff;
+            box-shadow: 0 0 0 2px #cbd5e0;
+        }
+
+        .input:valid {
+            border: 1px solid green;
+        }
+
+        .input:invalid {
+            border: 1px solid rgba(14, 14, 14, 0.205);
+        }
+
+        .submit {
+            background-color: #1a202c;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .container {
+            padding: 4%;
+            padding-top: 2%;
+        }
+
+        .qrcode {
+            display: flex;
+        }
+
+        #qrcodeLeft {
+            height: 2px;
+            width: 2px;
+        }
+
+        .qrcode #qrcodeRight {
+            margin-left: auto;
+        }
+
+        #barcodeContainer {
+            position: relative;
+            margin-top: 40px;
+            margin-left: -3.5%;
+        }
+
+        #barcode {
+            margin-left: -10%;
+            margin-top: -1.5%;
+        }
+
+        #barcodeContainer svg {
+            width: 40%;
+        }
+
+        #barcodeText {
+            position: absolute;
+            top: 70%;
+            left: 5%;
+            width: 84%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        .error {
+            animation: shake 0.1s linear 10;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-2px);
+            }
+
+            50% {
+                transform: translateX(0);
+            }
+
+            75% {
+                transform: translateX(2px);
+            }
+
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @media print {
+
+            /* Hide the input fields and buttons during printing */
+            input,
+            button,
+            label,
+            .input-container {
+                display: none;
+            }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <div id="codeContainer">
+            <div class="qrcode">
+                <div id="qrcodeLeft"></div>
+                <div id="qrcodeRight"></div>
+            </div>
+
+
+            <div id="barcodeContainer">
+                <svg id="barcode"></svg>
+                <div id="barcodeText"></div>
+            </div>
+        </div>
+
+        <div class="input-container">
+
+
+            <div class="form">
+                <span class="title">Code Generator V2</span>
+                <label for="username" class="label">Bar Code</label>
+                <input class="input" type="text" id="barcodeTextInput" required placeholder="Enter barcode text">
+                <label for="email" class="label">Coordinates</label>
+                <input class="input" type="text" id="qrCoordinates" required placeholder="Enter Coordinates">
+                <label for="password" class="label">Job code</label>
+                <input type="text" placeholder="Enter Job code" id="qrJobCode" required class="input">
+
+                <div class="button-container">
+                    <button class="submit" onclick="generateCodes()">Generate Codes</button>
+                    <button class="submit" onclick="printCodes()">Print Codes</button>
+                </div>
+                <br>
+                <br>
+                <a href="./index.html">Go to version one</a>
+            </div>
+            <!-- <div>
+                <label for="barcodeText">Barcode Text:</label>
+                <input type="text" id="barcodeTextInput" placeholder="Enter barcode text" value="GA1326943-415280">
+            </div>
+            <div>
+                <label for="qrText1">QR Code Text 1:</label>
+                <input type="text" id="qrCoordinates" placeholder="Enter QR code text 1" value="Your QR Code Content 1">
+            </div>
+            <div>
+                <label for="qrText2">QR Code Text 2:</label>
+                <input type="text" id="qrJobCode" placeholder="Enter QR code text 2" value="Your QR Code Content 2">
+            </div>
+
+            <br>
+            <div class="button-container">
+                <button onclick="generateCodes()">Generate Codes</button>
+                <button onclick="printCodes()">Print Codes</button>
+            </div> -->
+        </div>
+
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script>
+        function generateCodes() {
+            var barcodeValue = document.getElementById("barcodeTextInput").value;
+            var qrText1 = document.getElementById("qrCoordinates").value;
+            var qrText2 = document.getElementById("qrJobCode").value;
+            // Clear previous QR codes
+            // co ordinates
+            document.getElementById("qrcodeLeft").innerHTML = "";
+            // gapa number
+            document.getElementById("qrcodeRight").innerHTML = "";
+
+            // Generate Barcode
+            JsBarcode("#barcode", barcodeValue, {
+                format: "CODE128",
+                lineColor: "#000",
+                width: 1.07,
+                height: 32,
+                displayValue: false
+            });
+
+            // Set barcode text
+            document.getElementById("barcodeText").textContent = barcodeValue;
+
+            // Generate QR Code Left
+            new QRCode(document.getElementById("qrcodeLeft"), {
+                text: qrText1,
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+
+            // Generate QR Code Right
+            new QRCode(document.getElementById("qrcodeRight"), {
+                text: qrText2,
+                width: 90,
+                height: 90,
+                colorDark: "#000000",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        }
+
+        function printCodes() {
+            window.print();
+        }
+
+        // Generate initial codes on window load
+        // window.onload = generateCodes;
+
+    </script>
+</body>
+
+</html>
