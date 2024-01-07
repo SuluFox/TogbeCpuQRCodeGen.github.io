@@ -124,32 +124,6 @@
             font-size: 12px;
         }
 
-        .error {
-            animation: shake 0.1s linear 10;
-        }
-
-        @keyframes shake {
-            0% {
-                transform: translateX(0);
-            }
-
-            25% {
-                transform: translateX(-2px);
-            }
-
-            50% {
-                transform: translateX(0);
-            }
-
-            75% {
-                transform: translateX(2px);
-            }
-
-            100% {
-                transform: translateX(0);
-            }
-        }
-
         @media print {
 
             /* Hide the input fields and buttons during printing */
@@ -158,6 +132,20 @@
             label,
             .input-container {
                 display: none;
+            }
+
+            #qrcodeLeft {
+                margin-left: -18px;
+
+            }
+
+            .qrcode #qrcodeRight {
+                margin-right: -25px;
+            }
+
+            #barcodeContainer {
+                margin-top: 38px;
+                margin-left: -4.5%;
             }
 
         }
@@ -239,7 +227,7 @@
             JsBarcode("#barcode", barcodeValue, {
                 format: "CODE128",
                 lineColor: "#000",
-                width: 1.07,
+                width: 1.2,
                 height: 32,
                 displayValue: false
             });
@@ -251,7 +239,7 @@
             new QRCode(document.getElementById("qrcodeLeft"), {
                 text: qrText1,
                 width: 90,
-                height: 90,
+                height: 85,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
@@ -260,8 +248,8 @@
             // Generate QR Code Right
             new QRCode(document.getElementById("qrcodeRight"), {
                 text: qrText2,
-                width: 90,
-                height: 90,
+                width: 80,
+                height: 80,
                 colorDark: "#000000",
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
