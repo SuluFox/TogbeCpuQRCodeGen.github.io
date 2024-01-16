@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="image\iconTogbe.ico" type="image/x-icon">
 
+
     <style>
         .input-container {
             margin: 25%;
@@ -32,7 +33,9 @@
 
         .form .button-container {
             display: flex;
-            gap: 5px;
+            gap: 8px;
+            justify-content: center;
+            align-items: center;
         }
 
         .title {
@@ -74,11 +77,14 @@
 
         .submit {
             background-color: #1a202c;
+            width: 30%;
             color: #fff;
             border: none;
             border-radius: 4px;
             padding: 10px 20px;
-            font-size: 1.2rem;
+            font-size: 0.7rem;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
             transition: all 0.2s ease-in-out;
         }
@@ -175,13 +181,14 @@
             <div class="form">
                 <span class="title">Code Generator V2</span>
                 <label for="username" class="label">Bar Code</label>
-                <input class="input" type="text" id="barcodeTextInput" readonly placeholder="Barcode text">
+                <input class="input" type="text" id="barcodeTextInput" placeholder="Barcode text">
                 <label for="email" class="label">Coordinates</label>
                 <input class="input" type="text" id="qrCoordinates" required placeholder="Enter Coordinates">
                 <label for="password" class="label">Job code</label>
                 <input type="text" placeholder="Enter Job code" id="qrJobCode" required class="input">
 
                 <div class="button-container">
+                    <button class="submit" onclick="calculateMean()">Get Mean</button>
                     <button class="submit" onclick="generateCodes()">Generate Codes</button>
                     <button class="submit" onclick="printCodes()">Print Codes</button>
                 </div>
@@ -196,6 +203,19 @@
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <script>
+
+        function calculateMean() {
+            const polygonString = document.getElementById('qrCoordinates').value;
+            var barcodeInput = document.getElementById("barcodeTextInput");
+
+            // Call your existing function to calculate mean coordinates
+            const meanResult = calculateMeanFromPolygon(polygonString);
+
+            // Set barcode value
+            const barcodeValue = `GA${meanResult.meanX}-${meanResult.meanY}`;
+            barcodeInput.value = barcodeValue;
+        }
+
 
         function calculateMeanFromPolygon(polygonString) {
             const coordinatesRegex = /\((.*?)\)/;
@@ -214,23 +234,15 @@
             return { meanX, meanY };
         }
 
-       
         function generateCodes() {
-            var barcodeInput = document.getElementById("barcodeTextInput");
+            var barcodeValue = document.getElementById("barcodeTextInput").value;
             var qrText1 = document.getElementById("qrCoordinates").value;
             var qrText2 = document.getElementById("qrJobCode").value;
-
             // Clear previous QR codes
+            // co ordinates
             document.getElementById("qrcodeLeft").innerHTML = "";
+            // gapa number
             document.getElementById("qrcodeRight").innerHTML = "";
-
-            // Calculate mean and display result
-            const polygonString = qrText1; // Use the coordinates as the polygon string
-            const meanResult = calculateMeanFromPolygon(polygonString);
-
-            // Set barcode value
-            const barcodeValue = `GA${meanResult.meanX}-${meanResult.meanY}`;
-            barcodeInput.value = barcodeValue;
 
             // Generate Barcode
             JsBarcode("#barcode", barcodeValue, {
@@ -263,17 +275,13 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-
-            // Set mean result value
-            document.getElementById("meanResult").value = barcodeValue;
         }
 
         function printCodes() {
             window.print();
         }
 
-        // Generate initial codes on window load
-        // window.onload = generateCodes;
+
 
     </script>
 </body>
