@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Mean Coordinates Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+        }
+
+        .qrcode {
+            display: flex;
+        }
+
+        #qrImage1 {
+            height: 80px;
+            width: 80px;
+        }
+
+        #qrImage2 {
+            height: 80px;
+            width: 80px;
+        }
+
+        .qrcode #qrImage2 {
+            margin-left: auto;
+        }
+
+        #barcodeContainer {
+            position: relative;
+            margin-top: 40px;
+            margin-left: -3.5%;
+        }
+
+        #barcode {
+            margin-left: -10%;
+            margin-top: -1.5%;
+        }
+
+        #barcodeContainer svg {
+            width: 40%;
+        }
+
+        #barcodeText {
+            position: absolute;
+            top: 75%;
+            left: 5%;
+            width: 84%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+        }
+
+        @media print {
+
+            /* Hide the input fields and buttons during printing */
+            #dnp {
+                display: none;
+            }
+
+            #qrImage1 {
+                margin-left: -18px;
+            }
+
+            .qrcode #qrImage2 {
+                margin-right: -25px;
+            }
+
+            #barcodeContainer {
+                margin-top: 38px;
+                margin-left: -4.5%;
+            }
+        }
+
+        .printableContainer {
+            padding: 4%;
+            padding-top: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="dnp" class="bg-white-100 p-8">
+        <div class="max-w-md mx-auto bg-gray p-6 rounded-md shadow-md">
+            <h1 class="text-2xl font-bold mb-4">Code Generator V3</h1>
+
+            <form id="coordinatesForm" class="mb-4">
+                <label for="polygonInput" class="block text-gray-700 text-sm font-bold mb-2">Polygon
+                    Coordinates:</label>
+                <textarea id="polygonInput" name="polygon" rows="5" placeholder="Enter polygon coordinates"
+                    class="w-full px-3 py-2 border rounded-md"></textarea>
+
+                <!-- Add job code input field -->
+                <label for="jobCodeInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">Job Code:</label>
+                <input type="text" id="jobCodeInput" name="jobCode" placeholder="Enter job code"
+                    class="w-full px-3 py-2 border rounded-md">
+
+                <!-- Add gapa number input field -->
+                <label for="gapaNumberInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">GAPA
+                    Number:</label>
+                <input type="text" id="gapaNumberInput" name="gapaNumber" placeholder="GAPA number"
+                    class="w-full px-3 py-2 border rounded-md">
+
+                <!-- Add Mean button -->
+                <button type="button" onclick="calculateMean()"
+                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Mean</button>
+
+                <!-- Add generate button -->
+                <button type="button" onclick="generate()"
+                    class="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">Generate</button>
+
+                <!-- Add print button -->
+                <button type="button" onclick="printCodes()"
+                    class="mt-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-700">Print</button>
+            </form>
+
+            <div class="mt-6 text-center">
+                <a href="./index.html" class="text-blue-500 hover:underline mx-2">Version 1</a>
+                <span class="text-gray-500">|</span>
+                <a href="./testv2.html" class="text-blue-500 hover:underline mx-2">Version 2</a>
+            </div>
+        </div>
+
+    </div>
+
+    <div id="codeContainer" class="printableContainer">
+        <div id="myDiv" class="myClass">
+            <div class="qrcode ">
+                <img class="printable-image" id="qrImage1" />
+                <img class="printable-image" id="qrImage2" />
+            </div>
+            <div id="barcodeContainer">
+                <svg id="barcode"></svg>
+                <div id="barcodeText"></div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script>
+        let qrImage1 = document.getElementById("qrImage1");
+        let qrImage2 = document.getElementById("qrImage2");
+        let qrCoordinates = document.getElementById("polygonInput");
+        let qrJobcode = document.getElementById("jobCodeInput");
+        let barcodeValue = document.getElementById("gapaNumberInput");
+        let barcodetext = document.getElementById("barcodeText");
+
+        function generate() {
+            qrImage1.src =
+                "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
+                qrCoordinates.value;
+            qrImage2.src =
+                "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
+                qrJobcode.value;
+
+
+            // Set the src attribute of the image tags in the printableContainer
+            document.querySelector(
+                ".printableContainer #myDiv .qrcode img:first-child"
+            ).src = qrImage1.src;
+            document.querySelector(
+                ".printableContainer #myDiv .qrcode img:last-child"
+            ).src = qrImage2.src;
+
+            // Generate Barcode
+            JsBarcode("#barcode", barcodeValue.value, {
+                format: "CODE128",
+                lineColor: "#000",
+                width: 1.2,
+                height: 32,
+                displayValue: false
+            });
+
+            barcodetext.textContent = barcodeValue.value;
+        }
+
+        function printCodes() {
+            window.print();
+        }
+
+        function calculateMean() {
+            const polygonString = document.getElementById('polygonInput').value;
+            // Call your existing function to calculate mean coordinates
+            const result = calculateMeanFromPolygon(polygonString);
+
+            // Display result
+            // document.getElementById('meanCoordinates').textContent = `GA${result.meanX}-${result.meanY}`;
+            barcodeValue.value = `GA${result.meanX}-${result.meanY}`;
+        }
+
+        function calculateMeanFromPolygon(polygonString) {
+            const coordinatesRegex = /\((.*?)\)/;
+            const coordinatesString = polygonString.match(coordinatesRegex)[1];
+            const coordinates = coordinatesString.split(',').map(point => point.trim().split(/\s+/).map(parseFloat));
+
+            const validCoordinates = coordinates.filter(point => !point.some(isNaN));
+
+            if (validCoordinates.length === 0) {
+                return { meanX: NaN, meanY: NaN };
+            }
+
+            const meanX = Math.round(validCoordinates.reduce((sum, point) => sum + point[0], 0) / validCoordinates.length);
+            const meanY = Math.round(validCoordinates.reduce((sum, point) => sum + point[1], 0) / validCoordinates.length);
+
+            return { meanX, meanY };
+        }
+
+        // Example polygon string
+        const polygonString = "POLYGON((1135923.349 373811.711, 1135855.108 373843.568, 1135888.49 373933.511, 1135957.718 373903.83, 1135923.349 373811.711))";
+
+        // Calculate mean coordinates
+        const result = calculateMeanFromPolygon(polygonString);
+
+        // Display result in the requested format
+        console.log(`GA${Math.round(result.meanX)}${Math.round(result.meanY)}`);
+    </script>
+
+</body>
+
+</html>
