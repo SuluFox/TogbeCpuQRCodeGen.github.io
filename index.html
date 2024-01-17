@@ -243,6 +243,27 @@
         display: none !important;
       }
     }
+       .btn-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .btn-container a {
+            display: block;
+            color: #3490dc;
+            text-decoration: none;
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .btn-container a:hover {
+            text-decoration: underline;
+        }
   </style>
 </head>
 
@@ -264,7 +285,11 @@
     </button>
     <button class="reset" onclick="resetForm()">Reset</button>
     <br><br><br>
-    <a href="./testv2.html">Go to version two</a>
+        <div class="mt-6 text-center">
+          <a href="./testv2.html" class="text-blue-500 hover:underline mx-2">Go to version two</a>
+          <span class="text-gray-500">|</span>
+          <a href="./theone.html" class="text-blue-500 hover:underline mx-2">Go to version three</a>
+        </div>
   </div>
 
 
