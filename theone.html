@@ -94,14 +94,14 @@
                     class="w-full px-3 py-2 border rounded-md"></textarea>
 
                 <!-- Add job code input field -->
-                <label for="jobCodeInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">Job Code:</label>
-                <input type="text" id="jobCodeInput" name="jobCode" placeholder="Enter job code"
+                <label for="gapaNumberInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">GAPA
+                Number:</label>
+                <input type="text" id="gapaNumberInput" name="jobCode" placeholder="Enter GAPA number"
                     class="w-full px-3 py-2 border rounded-md">
 
                 <!-- Add gapa number input field -->
-                <label for="gapaNumberInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">GAPA
-                    Number:</label>
-                <input type="text" id="gapaNumberInput" name="gapaNumber" placeholder="GAPA number"
+                <label for="jobCodeInput" class="block text-gray-700 text-sm font-bold mt-4 mb-2">Job Code:</label>
+                <input type="text" id="jobCodeInput" name="gapaNumber" placeholder="Job Code"
                     class="w-full px-3 py-2 border rounded-md">
 
                 <!-- Add Mean button -->
@@ -147,8 +147,8 @@
         let qrImage1 = document.getElementById("qrImage1");
         let qrImage2 = document.getElementById("qrImage2");
         let qrCoordinates = document.getElementById("polygonInput");
-        let qrJobcode = document.getElementById("jobCodeInput");
-        let barcodeValue = document.getElementById("gapaNumberInput");
+        let gapaNum = document.getElementById("gapaNumberInput");
+        let barcodeValue = document.getElementById("jobCodeInput");
         let barcodetext = document.getElementById("barcodeText");
 
         function generate() {
@@ -157,7 +157,7 @@
                 qrCoordinates.value;
             qrImage2.src =
                 "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=" +
-                qrJobcode.value;
+                gapaNum.value;
 
 
             // Set the src attribute of the image tags in the printableContainer
